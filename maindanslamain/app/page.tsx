@@ -192,7 +192,7 @@ export default function Home() {
                 <div className="relative mx-auto">
                   <div className="relative overflow-hidden rounded-xl border border-slate-200 shadow-lg">
                     <Image
-                      src="https://i.postimg.cc/L4kRJrrh/IMG-0317.jpg"
+                      src="/images/youness.jpg"
                       width={1000}
                       height={800}
                       alt="Dr. Youness Chraibi avec des collègues lors d'un événement de coaching"
