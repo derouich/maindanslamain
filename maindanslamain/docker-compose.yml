@@ -1,8 +1,17 @@
 version: '3.9'
+
 services:
   maindanslamain:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "85:85"
     container_name: maindanslamain_container
+    environment:
+      - PORT=85
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["npm", "start"]
     restart: always
