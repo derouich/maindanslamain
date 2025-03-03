@@ -13,5 +13,5 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: ["npm", "run", "build"]
-    restart: always
+    restart: on-failure  # Avoid infinite restart loops
+    command: ["npm", "start"]  # Only start, not build again
