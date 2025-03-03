@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  maindanslamain:
+    build: .
+    ports:
+      - "85:85"
+    container_name: maindanslamain_container
+    restart: always
