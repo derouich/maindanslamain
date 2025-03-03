@@ -7,17 +7,17 @@ WORKDIR /app
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies including Next.js
 RUN npm install
 
 # Copy the rest of the application files
 COPY . .
 
-# Bypass ESLint during build by ignoring lint errors
-RUN npm run lint || true
+# Check if next is installed correctly
+RUN ls -l node_modules/.bin
 
-# Build the Next.js application
-RUN next build
+# Build the Next.js application using npx to avoid "next: not found" error
+RUN npx next build
 
 # Expose port 85 to the outside world
 EXPOSE 85
