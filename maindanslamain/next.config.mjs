@@ -1,17 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['i.postimg.cc'], // Add the domain of the image
+    // Remove the deprecated 'domains' and use 'remotePatterns' only
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'i.postimg.cc',
-        pathname: '/**',
+        pathname: '/**', // Allow all images under this domain
       },
     ],
   },
   eslint: {
-    ignoreDuringBuilds: true, // Ignore ESLint during builds if needed
+    ignoreDuringBuilds: true,
   },
 };
 
