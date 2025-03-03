@@ -13,5 +13,5 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: ["npm", "start"]
+    command: ["npm", "run", "build"]
     restart: always
