@@ -13,10 +13,7 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
-# Check if next is installed correctly
-RUN ls -l node_modules/.bin
-
-# Build the Next.js application using npx to avoid "next: not found" error
+# Build the Next.js application
 RUN npx next build
 
 # Expose port 85 to the outside world
