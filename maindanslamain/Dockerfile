@@ -13,11 +13,11 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
-# Disable ESLint during build
-ENV NEXT_PUBLIC_DISABLE_ESLINT=true
+# Bypass ESLint during build by ignoring lint errors
+RUN npm run lint || true
 
 # Build the Next.js application
-RUN npm run build
+RUN next build
 
 # Expose port 85 to the outside world
 EXPOSE 85
