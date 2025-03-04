@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build the Next.js application
-RUN npx next build
+RUN npm run build
 
 # Expose port 85 to the outside world
 EXPOSE 85
