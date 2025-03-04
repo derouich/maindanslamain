@@ -13,5 +13,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/.next # Exclude .next from being overwritten
     restart: on-failure
     command: ["npm", "start"]
