@@ -16,6 +16,9 @@ COPY . .
 # Build the Next.js application
 RUN npm run build
 
+# Verify that the .next directory exists (Debugging Step)
+RUN ls -l .next
+
 # Expose port 85 to the outside world
 EXPOSE 85
 
