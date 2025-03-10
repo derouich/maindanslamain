@@ -16,8 +16,14 @@ const SubscriptionSchema = z.object({
   phone: z.string().min(8, "Veuillez entrer un numéro de téléphone valide"),
 })
 
+interface Subscriber {
+  id: number;
+  email: string;
+  created_at: string;
+}
+
 // Fallback to in-memory storage if Supabase is not configured
-let inMemorySubscribers = []
+let inMemorySubscribers: Subscriber[] = []
 
 // Read subscribers from Supabase or in-memory
 async function readSubscribers() {
