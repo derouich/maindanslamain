@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  maindanslamain:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "85:85"
+    container_name: maindanslamain_container
+    environment:
+      - PORT=85
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next # Exclude .next from being overwritten
+    restart: on-failure
+    command: ["npm", "start"]
