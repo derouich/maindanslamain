@@ -12,14 +12,7 @@ export const metadata: Metadata = {
   title: "MainDansLaMain - Votre Voyage Spirituel Commence Bientôt",
   description:
     "Embarquez dans une expérience transformative de mentorat avec Dr. Youness Chraibi. Découvrez comment MainDansLaMain peut vous guider vers l'épanouissement personnel et spirituel.",
-  icons: {
-    icon: [
-      {
-        url: "https://em-content.zobj.net/source/apple/354/folded-hands_1f64f.png",
-        href: "https://em-content.zobj.net/source/apple/354/folded-hands_1f64f.png",
-      },
-    ],
-  },
+  // Remove the icons configuration completely to avoid any favicon references
 }
 
 export default function RootLayout({
