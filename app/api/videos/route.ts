@@ -3,6 +3,20 @@ import { supabaseAdmin } from "@/lib/supabase"
 
 export const revalidate = 0 // Disable caching for this API route
 
+// Ajoutez une interface Video pour typer correctement les données
+interface Video {
+  id: string
+  title: string
+  description?: string
+  category: string
+  url: string
+  thumbnail_url?: string
+  file_name: string
+  thumbnail_file_name?: string
+  created_at: string
+  updated_at?: string
+}
+
 export async function GET() {
   try {
     console.log("Fetching videos from Supabase...")
@@ -20,9 +34,15 @@ export async function GET() {
 
     console.log(`Found ${videos?.length || 0} videos`)
 
+    // Ajouter la propriété isDemo à chaque vidéo
+    const videosWithDemo = (videos || []).map((video: Video) => ({
+      ...video,
+      isDemo: false,
+    }))
+
     return NextResponse.json(
       {
-        videos: videos || [],
+        videos: videosWithDemo,
       },
       {
         headers: {

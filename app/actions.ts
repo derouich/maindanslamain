@@ -4,6 +4,14 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { createClient } from "@supabase/supabase-js"
 
+// Ajouter cette interface au début du fichier, après les imports
+interface Subscriber {
+  id: number
+  name: string
+  phone: string
+  created_at: string
+}
+
 // Créer directement un client Supabase avec la clé de service
 const supabaseAdmin = createClient(
   "https://znpcnzkaaokxpxqexksu.supabase.co",
@@ -16,14 +24,11 @@ const SubscriptionSchema = z.object({
   phone: z.string().min(8, "Veuillez entrer un numéro de téléphone valide"),
 })
 
-interface Subscriber {
-  id: number;
-  email: string;
-  created_at: string;
-}
+// Modifier la déclaration de inMemorySubscribers pour inclure le type
+let inMemorySubscribers: Subscriber[] = []
 
 // Fallback to in-memory storage if Supabase is not configured
-let inMemorySubscribers: Subscriber[] = []
+// let inMemorySubscribers = []
 
 // Read subscribers from Supabase or in-memory
 async function readSubscribers() {
@@ -357,17 +362,14 @@ export async function cleanupTemporaryVideos() {
 
     if (error) {
       console.error("Erreur lors du nettoyage des vidéos temporaires:", error)
-      return { success: false, message: "Erreur lors du nettoyage des vidéos temporaires" }
+      throw new Error("Erreur lors du nettoyage des vidéos temporaires")
     }
 
     revalidatePath("/admin/videos")
-    return { success: true }
+    // Don't return any data
   } catch (error) {
     console.error("Erreur lors du nettoyage des vidéos temporaires:", error)
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : "Une erreur est survenue",
-    }
+    // Don't return any data, just log the error
   }
 }
 

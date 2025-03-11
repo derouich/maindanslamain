@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react"
 import TikTokStylePlayer from "./tiktok-style-player"
 
+// Définir le type Video pour assurer la cohérence
 type Video = {
   id: string
   url: string

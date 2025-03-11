@@ -8,6 +8,17 @@ import { supabaseAdmin } from "@/lib/supabase"
 import ParisEventSection from "@/components/paris-event-section"
 import { getSectionVisibility } from "./actions/section-visibility"
 
+// Définir le type Video pour assurer la cohérence
+interface Video {
+  id: string
+  url: string
+  title: string
+  description?: string
+  category: string
+  thumbnailUrl?: string
+  isDemo?: boolean
+}
+
 // Désactiver le cache de la page
 export const revalidate = 0
 export const dynamic = "force-dynamic"
@@ -21,7 +32,7 @@ export default async function Home() {
   }
 
   // Récupérer les vidéos directement depuis Supabase au lieu de passer par l'API
-  let videos = []
+  let videos: Video[] = []
 
   try {
     console.log("Récupération des vidéos depuis Supabase...")
@@ -45,6 +56,7 @@ export default async function Home() {
       description: video.description || undefined,
       category: video.category,
       thumbnailUrl: video.thumbnail_url || undefined,
+      isDemo: false, // Ajouter cette propriété pour les vidéos de la base de données
     }))
 
     console.log(`${videos.length} vidéos récupérées avec succès`)
