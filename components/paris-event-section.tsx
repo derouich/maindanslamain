@@ -1,21 +1,46 @@
 "use client"
 
 import { useState } from "react"
-import { CalendarDays, MapPin, Clock, Users, ChevronRight } from "lucide-react"
+import { CalendarDays, MapPin, Clock, Users, ChevronRight, CreditCard, Smartphone, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 
 const PAYPAL_USERNAME = "maindanslamain" // Replace with actual PayPal username
+const BANK_INFO = {
+  rib: "350810000000001044099249",
+  iban: "MA64 350 810 0000000010440992 49",
+  whatsapp: "00212772672821",
+}
 
 export default function ParisEventSection() {
   const [selectedTicket, setSelectedTicket] = useState<"single" | "couple" | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<"paypal" | "bank">("paypal")
+  const [step, setStep] = useState<"select" | "payment" | "confirmation">("select")
 
-  const handlePayment = (type: "single" | "couple") => {
-    const amount = type === "single" ? "155" : "300"
-    const description = type === "single" ? "Billet individuel" : "Billet couple"
+  const handleTicketSelect = (type: "single" | "couple") => {
+    setSelectedTicket(type)
+    setStep("payment")
+  }
 
-    // Redirect to PayPal payment
-    window.location.href = `https://www.paypal.me/${PAYPAL_USERNAME}/${amount}EUR`
+  const handlePayment = () => {
+    // First handle the payment based on method
+    if (paymentMethod === "paypal") {
+      const amount = selectedTicket === "single" ? "155" : "300"
+      // Open PayPal in a new tab
+      window.open(`https://www.paypal.me/${PAYPAL_USERNAME}/${amount}EUR`, "_blank")
+    }
+
+    // Then redirect to WhatsApp for proof of payment
+    const ticketType = selectedTicket === "single" ? "individuel" : "couple"
+    const paymentType = paymentMethod === "paypal" ? "PayPal" : "virement bancaire"
+    const message = `Bonjour, je souhaite confirmer ma réservation pour un billet ${ticketType} pour la formation à Paris. J'ai effectué le paiement par ${paymentType}. Voici mon justificatif de paiement.`
+    window.location.href = `https://wa.me/${BANK_INFO.whatsapp}?text=${encodeURIComponent(message)}`
+  }
+
+  const goBack = () => {
+    setStep("select")
   }
 
   return (
@@ -172,55 +197,133 @@ export default function ParisEventSection() {
                         Réservation
                       </h3>
 
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div
-                          className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${
-                            selectedTicket === "single"
-                              ? "border-emerald-500 bg-emerald-50"
-                              : "border-gray-200 hover:border-emerald-300"
-                          }`}
-                          onClick={() => setSelectedTicket("single")}
-                        >
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h4 className="text-xl font-bold text-gray-800">Billet Individuel</h4>
-                              <p className="text-gray-600">Accès complet à la formation</p>
-                            </div>
-                            <div className="text-3xl font-bold text-emerald-600">155€</div>
-                          </div>
-                          <Button
-                            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                            onClick={() => handlePayment("single")}
+                      {step === "select" && (
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <div
+                            className="p-6 rounded-xl border-2 border-gray-200 hover:border-emerald-300 transition-all cursor-pointer flex flex-col justify-between"
+                            onClick={() => handleTicketSelect("single")}
                           >
-                            Réserver maintenant
-                            <ChevronRight className="ml-2 h-4 w-4" />
-                          </Button>
-                        </div>
+                            <div>
+                              <div className="flex justify-between items-start mb-4">
+                                <div>
+                                  <h4 className="text-xl font-bold text-gray-800">Billet Individuel</h4>
+                                  <p className="text-gray-600">Accès complet à la formation</p>
+                                </div>
+                                <div className="text-3xl font-bold text-emerald-600">155€</div>
+                              </div>
+                            </div>
+                            <Button
+                              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white mt-4"
+                              onClick={() => handleTicketSelect("single")}
+                            >
+                              Sélectionner
+                              <ChevronRight className="ml-2 h-4 w-4" />
+                            </Button>
+                          </div>
 
-                        <div
-                          className={`p-6 rounded-xl border-2 transition-all cursor-pointer ${
-                            selectedTicket === "couple"
-                              ? "border-emerald-500 bg-emerald-50"
-                              : "border-gray-200 hover:border-emerald-300"
-                          }`}
-                          onClick={() => setSelectedTicket("couple")}
-                        >
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h4 className="text-xl font-bold text-gray-800">Billet Couple</h4>
-                              <p className="text-gray-600">Tarif spécial pour les couples</p>
-                            </div>
-                            <div className="text-3xl font-bold text-emerald-600">300€</div>
-                          </div>
-                          <Button
-                            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                            onClick={() => handlePayment("couple")}
+                          <div
+                            className="p-6 rounded-xl border-2 border-gray-200 hover:border-emerald-300 transition-all cursor-pointer flex flex-col justify-between"
+                            onClick={() => handleTicketSelect("couple")}
                           >
-                            Réserver pour deux
-                            <ChevronRight className="ml-2 h-4 w-4" />
+                            <div>
+                              <div className="flex justify-between items-start mb-4">
+                                <div>
+                                  <h4 className="text-xl font-bold text-gray-800">Billet Couple</h4>
+                                  <p className="text-gray-600">Tarif spécial pour les couples</p>
+                                </div>
+                                <div className="text-3xl font-bold text-emerald-600">300€</div>
+                              </div>
+                            </div>
+                            <Button
+                              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white mt-4"
+                              onClick={() => handleTicketSelect("couple")}
+                            >
+                              Sélectionner
+                              <ChevronRight className="ml-2 h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {step === "payment" && (
+                        <div className="space-y-6">
+                          <div className="flex items-center justify-between">
+                            <Button variant="outline" size="sm" onClick={goBack} className="flex items-center gap-1">
+                              <ChevronRight className="h-4 w-4 rotate-180" />
+                              Retour
+                            </Button>
+                            <div className="text-emerald-700 font-medium">
+                              Billet sélectionné: {selectedTicket === "single" ? "Individuel (155€)" : "Couple (300€)"}
+                            </div>
+                          </div>
+
+                          <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                            <h4 className="font-semibold text-emerald-800 mb-4">
+                              Choisissez votre méthode de paiement
+                            </h4>
+
+                            <RadioGroup
+                              defaultValue="paypal"
+                              value={paymentMethod}
+                              onValueChange={(value) => setPaymentMethod(value as "paypal" | "bank")}
+                              className="space-y-4"
+                            >
+                              <div className="flex items-start space-x-2 bg-white p-3 rounded-md border border-gray-200">
+                                <RadioGroupItem value="paypal" id="paypal" className="mt-1" />
+                                <div className="flex-1">
+                                  <Label htmlFor="paypal" className="font-medium text-gray-800 flex items-center gap-2">
+                                    <CreditCard className="h-4 w-4 text-blue-600" />
+                                    PayPal
+                                  </Label>
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    Paiement sécurisé via PayPal. Vous serez redirigé vers la plateforme PayPal.
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex items-start space-x-2 bg-white p-3 rounded-md border border-gray-200">
+                                <RadioGroupItem value="bank" id="bank" className="mt-1" />
+                                <div className="flex-1">
+                                  <Label htmlFor="bank" className="font-medium text-gray-800 flex items-center gap-2">
+                                    <CreditCard className="h-4 w-4 text-emerald-600" />
+                                    Virement Bancaire
+                                  </Label>
+                                  <div className="text-sm text-gray-600 mt-1 space-y-1">
+                                    <p>Effectuez un virement avec les coordonnées suivantes:</p>
+                                    <p>
+                                      <span className="font-medium">RIB:</span> {BANK_INFO.rib}
+                                    </p>
+                                    <p>
+                                      <span className="font-medium">IBAN:</span> {BANK_INFO.iban}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </RadioGroup>
+                          </div>
+
+                          <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <div className="flex items-start gap-3">
+                              <Smartphone className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                              <div>
+                                <h4 className="font-medium text-blue-800">Confirmation par WhatsApp</h4>
+                                <p className="text-sm text-blue-700 mt-1">
+                                  Après votre paiement, vous serez redirigé vers WhatsApp pour envoyer votre
+                                  justificatif au {BANK_INFO.whatsapp}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <Button
+                            className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-lg"
+                            onClick={handlePayment}
+                          >
+                            Payer et envoyer le justificatif
+                            <ArrowRight className="ml-2 h-5 w-5" />
                           </Button>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>
